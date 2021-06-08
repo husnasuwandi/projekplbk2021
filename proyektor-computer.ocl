@@ -1,0 +1,34 @@
+package Button
+    context Button::connectTo(OnOff:conDev)
+    pre : connectedDevice->isEmpty() --connected device harus nul biar bisa masuk device lain
+    post : connectedDevice = conDev
+
+    context Button::buttonPressed()
+    pre : connectedDevice->notEmpty() --connected device harus kosong  
+    post : connectedDevice->pressed()
+endpackage
+
+
+package Komputer
+    context Komputer::transmitData()
+    pre : true
+    post : print 'Proyektor hidup, data Berhasil Ditampilkan'
+
+    context Komputer::pressed()
+    pre : true
+    post : print 'Loading...'
+endpackage
+
+
+package Proyektor
+    context Proyektor::connectTo(LineInOut : device) 
+    pre : outputDevice->isEmpty()
+    post : outputDevice = device;
+
+    context Proyektor::pressed()
+    pre : true
+    post : if isOff == true and outputDevice->notEmpty()
+            then outputDevice->transmitData and isOff = !isOff 
+            else print 'Proyektor Mati' and isOff = !isOff 
+            endif
+endpackage
